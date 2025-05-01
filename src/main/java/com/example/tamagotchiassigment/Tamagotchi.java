@@ -22,7 +22,8 @@ public class Tamagotchi {
     private InformAble info = null;
 
     //The timer object that will decrease the food with 1 each second
-    private Timer timer = new Timer();
+    //private Timer timer = new Timer();
+    private Timeline tl = null;
 
     //Statemachine ref, used with state pattern design
     FeelingStateable feelingState = null;
@@ -66,16 +67,23 @@ public class Tamagotchi {
     {
         info = inform;
 
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                //The food instance variable may not be less then zero
-                if(food>0)
-                    setFood(getFood()-1);
+        //Decrease food
+        tl = new Timeline();
+        tl.setCycleCount(Timeline.INDEFINITE);
+        tl.setAutoReverse(false);
+        tl.getKeyFrames().add(new KeyFrame(Duration.seconds(1),
+                new EventHandler<ActionEvent>() {
+                    //This could be my game loop
+                    @Override
+                    public void handle(ActionEvent event) {
 
+                    //The food instance variable may not be less then zero
+                    if(food>0)
+                        setFood(getFood()-1);
 
-            }
-        },500,1000);
+                    }
+                }));
+        tl.play();
 
         //setFeelingState(new State()); // used with state pattern design
     }
